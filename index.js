@@ -11,30 +11,30 @@ const nextButton = document.querySelector('[data-js="button-next"]');
 const pagination = document.querySelector('[data-js="pagination"]');
 
 // States
-let page = 1;
-const searchQuery = "";
+var page = 1;
+let searchQuery = "";
 
 // Getting the cardObject
 let characterObject = await fetchCharacters(page);
-const maxPage = characterObject.info.pages;
-
-console.log(characterObject);
-
-// console.log(createCharacterCard(characterObject.results[12]));
+var maxPage = characterObject.info.pages;
 
 async function fetchCharacters(page) {
-  const result = await fetch(
-    `https://rickandmortyapi.com/api/character?page=${page}`
-  );
-  const data = await result.json();
-  cardContainer.innerHTML = "";
-  for (let i = 0; i < data.results.length; i++) {
-    cardContainer.append(createCharacterCard(data.results[i]));
-  }
-  return data;
-}
-console.log(maxPage);
+  try {
+    const result = await fetch(
+      `https://rickandmortyapi.com/api/character?page=${page}&name=${searchQuery}`
+    );
+    const data = await result.json();
+    cardContainer.innerHTML = "";
+    maxPage = data.info.pages;
 
+    for (let i = 0; i < data.results.length; i++) {
+      cardContainer.append(createCharacterCard(data.results[i]));
+    }
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
 fetchCharacters(1);
 
 nextButton.addEventListener("click", () => {
@@ -52,3 +52,20 @@ prevButton.addEventListener("click", () => {
     pagination.innerText = `${page} / ${maxPage}`;
   }
 });
+
+searchBar.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  searchQuery = event.target.firstElementChild.value;
+  await fetchCharacters();
+  page = 1;
+  pagination.innerText = `${page} / ${maxPage}`;
+  searchBar.firstElementChild.value = "";
+});
+
+// searchBar.addEventListener("input", (event) => {
+//   event.preventDefault();
+//   searchQuery = event.target.value;
+//   fetchCharacters();
+//   pagination.innerText = `Characters with ${searchQuery} in name`;
+//   searchQuery = "";
+// });
