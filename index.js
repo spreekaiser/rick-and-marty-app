@@ -19,10 +19,20 @@ const maxPage = 1;
 const page = 1;
 const searchQuery = "";
 
-console.log(createCharacterCard());
+// console.log(createCharacterCard(characterObject.results[12]));
 
 async function fetchCharacters() {
   const result = await fetch("https://rickandmortyapi.com/api/character");
   const data = await result.json();
   return data;
 }
+
+function getCharacterCard() {
+  cardContainer.innerHTML = "";
+  for (let i = 0; i < characterObject.results.length; i++) {
+    cardContainer.append(createCharacterCard(characterObject.results[i]));
+  }
+  console.log(cardContainer);
+}
+
+getCharacterCard();
