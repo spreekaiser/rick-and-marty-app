@@ -10,12 +10,11 @@
     rgba(0, 0, 0, 0.09) 0px 32px 16px;
 }
 
-.card__image-container {
-  position: relative;
+.card:hover {
+  z-index: 2;
 }
 
 .card__image-gradient {
-  position: absolute;
   bottom: 0;
   height: 100px;
   width: 100%;
