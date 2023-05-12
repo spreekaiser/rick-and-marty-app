@@ -16,6 +16,7 @@ const headLine = document.querySelector("h1");
 // States
 var page = 1;
 let searchQuery = "";
+var data;
 
 // Getting the cardObject
 let characterObject = await fetchCharacters(page);
@@ -26,13 +27,14 @@ async function fetchCharacters(page) {
     const result = await fetch(
       `https://rickandmortyapi.com/api/character?page=${page}&name=${searchQuery}`
     );
-    const data = await result.json();
+    data = await result.json();
     if (data.error === "There is nothing here") {
       console.log("[fetch] - There is nothing here");
       const emptyContent = document.createElement("h2");
-      emptyContent.innerText = "There is nothing here";
-      cardContainer.prepend(emptyContent);
-      return emptyContent;
+      if (emptyContent.innerText === "") {
+        emptyContent.innerText = `There is no item of ${searchQuery} here`;
+        cardContainer.prepend(emptyContent);
+      }
     } else {
       console.log("[fetch] - data: ", data);
       cardContainer.innerHTML = "";
@@ -66,35 +68,31 @@ prevButton.addEventListener("click", () => {
   }
 });
 
-searchBar.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  console.clear();
-  console.log("target: ", event.target.firstElementChild.value);
-  if (event.target.firstElementChild.value) {
-    searchQuery = event.target.firstElementChild.value;
-    await fetchCharacters();
-
-    page = 1;
-    pagination.innerText = `${page} / ${maxPage}`;
-    searchBar.firstElementChild.value = "";
-    // if ((emptyContent.innerText = "There is nothing here")) {
-    //   console.log("[submit] - There is nothing here");
-    // }
-    const searchData = await fetchCharacters();
-    console.log("[submit] - Searching Content: ", searchQuery);
-    console.log(
-      `[submit] - total items of ${searchQuery}: `,
-      searchData.info.count
-    );
-  } else {
-    console.log("no items founded");
-  }
-});
-
-// searchBar.addEventListener("input", (event) => {
+// searchBar.addEventListener("submit", async (event) => {
 //   event.preventDefault();
-//   searchQuery = event.target.value;
-//   fetchCharacters();
-//   pagination.innerText = `Characters with ${searchQuery} in name`;
-//   searchQuery = "";
+//   console.clear();
+//   console.log("target: ", event.target.firstElementChild.value);
+//   if (event.target.firstElementChild.value) {
+//     searchQuery = event.target.firstElementChild.value;
+//     await fetchCharacters();
+
+//     page = 1;
+//     pagination.innerText = `${page} / ${maxPage}`;
+//     searchBar.firstElementChild.value = "";
+
+//     console.log("[submit] - Searching Content: ", searchQuery);
+//     console.log(`[submit] - total items of ${searchQuery}: `, data.info.count);
+//   } else {
+//     console.log("[submit] - no items founded");
+//   }
 // });
+
+searchBar.addEventListener("input", (event) => {
+  event.preventDefault();
+  searchQuery = event.target.value;
+  fetchCharacters();
+  pagination.innerText = `${page} / ${maxPage}`;
+
+  console.log("[input] - Searching Content: ", searchQuery);
+  console.log(`[input] - total items of ${searchQuery}: `, data.info.count);
+});
