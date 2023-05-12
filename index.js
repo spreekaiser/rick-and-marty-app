@@ -86,7 +86,6 @@ searchBar.addEventListener("submit", async (event) => {
   console.log("[submit] - Searching Content: ", searchQuery);
   console.log(`[submit] - total items of ${searchQuery}: `, data.info.count);
 });
-z;
 
 // searchBar.addEventListener("input", (event) => {
 //   event.preventDefault();
